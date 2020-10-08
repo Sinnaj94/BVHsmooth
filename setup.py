@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='BVHSmooth',
-    version='0.1',
+    name='bvh_smooth',
+    version='0.2',
     author='Virgínia Balbo',
     description='Smoothen your BVH Files',
     long_description=long_description,
