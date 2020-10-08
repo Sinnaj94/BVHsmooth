@@ -1,35 +1,42 @@
 import numpy as np
-import freqfilter
 import bvh
-import sys
-import args
+import freqfilter
 import spacefilter
 
-ARGS = args.get()
-INPUT = ARGS["-i"]
-OUTPUT = ARGS["-o"]
-FILTER = ARGS["--filter"]
-if FILTER == "butterworth":
-    ORDER = int(ARGS["--order"])
-    U0 = int(ARGS["--u0"])
-    BORDER = int(ARGS["--border"])
-if FILTER == "gaussian":
-    SIGMA = int(ARGS["--sigma"])
-    BORDER = int(ARGS["--border"])
-if FILTER == "average":
-    M = int(ARGS["-m"])
 
-bvh_file = bvh.read_file(INPUT)
+def butterworth(input_file, output_file, border=100, u0=60, order=2):
+    bvh_file = bvh.read_file(input_file)
 
-for i in range(0, 3):
-    v = bvh_file["POSITIONS"][:,i]
-    if FILTER == "average": bvh_file["POSITIONS"][:,i] = spacefilter.apply_average(v,M)
-    else:
-        f = freqfilter.fft(v,BORDER)
-        if FILTER == "gaussian": fil = freqfilter.gaussian_filter(len(f),SIGMA)
-        if FILTER == "butterworth": fil = freqfilter.butter_worth_filter(len(f),U0,ORDER)
-        ff = freqfilter.apply_filter(f,fil)
-        iff = freqfilter.ifft(ff,BORDER)
-        bvh_file["POSITIONS"][:,i] = np.real(iff)
+    for i in range(0, 3):
+        v = bvh_file["POSITIONS"][:, i]
+        f = freqfilter.fft(v, border)
+        fil = freqfilter.butter_worth_filter(len(f), u0, order)
+        ff = freqfilter.apply_filter(f, fil)
+        iff = freqfilter.ifft(ff, border)
+        bvh_file["POSITIONS"][:, i] = np.real(iff)
 
-bvh.write_file(OUTPUT,bvh_file)
+    bvh.write_file(output_file, bvh_file)
+
+
+def average(input_file, output_file, m=10):
+    bvh_file = bvh.read_file(input_file)
+
+    for i in range(0, 3):
+        v = bvh_file["POSITIONS"][:, i]
+        bvh_file["POSITIONS"][:, i] = spacefilter.apply_average(v, m)
+
+    bvh.write_file(output_file, bvh_file)
+
+
+def gaussian(input_file, output_file, border=100, sigma=10):
+    bvh_file = bvh.read_file(input_file)
+
+    for i in range(0, 3):
+        v = bvh_file["POSITIONS"][:, i]
+        f = freqfilter.fft(v, border)
+        fil = freqfilter.gaussian_filter(len(f), sigma)
+        ff = freqfilter.apply_filter(f, fil)
+        iff = freqfilter.ifft(ff, border)
+        bvh_file["POSITIONS"][:, i] = np.real(iff)
+
+    bvh.write_file(output_file, bvh_file)
