@@ -10,7 +10,7 @@ setuptools.setup(
     description='Smoothen your BVH Files',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    packages=['code'],
+    packages=setuptools.find_packages(),
     install_requires=["numpy"],
     classifiers=[
         "Programming Language :: Python :: 3",
