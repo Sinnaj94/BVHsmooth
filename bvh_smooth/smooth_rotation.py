@@ -1,4 +1,4 @@
-import angle
+from bvh_smooth import angle
 from bvh_smooth import bvh
 from bvh_smooth import freqfilter
 from bvh_smooth import spacefilter
