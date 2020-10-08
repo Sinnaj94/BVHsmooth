@@ -1,7 +1,7 @@
 import numpy as np
-import bvh
-import freqfilter
-import spacefilter
+from bvh_smooth import bvh
+from bvh_smooth import freqfilter
+from bvh_smooth import spacefilter
 
 
 def butterworth(input_file, output_file, border=100, u0=60, order=2):

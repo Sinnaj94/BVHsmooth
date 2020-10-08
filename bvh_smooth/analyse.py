@@ -1,5 +1,5 @@
 import sys
-import bvh
+from bvh_smooth import bvh
 
 def dp(a,b):
     return abs(a-b)
